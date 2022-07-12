@@ -742,7 +742,7 @@ function handleResponse (res) {
 	else if (res.a === 12 && res.type === 19 && GAME.char_data.klan_id == 3542) move()
 
 	// on SSJ use response
-	else if (res.a === 18 && res.ssj GAME.char_data.klan_id == 3542) move()
+	else if (res.a === 18 && res.ssj && GAME.char_data.klan_id == 3542) move()
 
 	// on collect CSK use response
 	else if (res.a === 21 && GAME.char_data.klan_id == 3542) {
