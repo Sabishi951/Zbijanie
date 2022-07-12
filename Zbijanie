@@ -50,19 +50,7 @@ $(document).bind('keydown', '1', function(){
         }
         return false;
     });
-$(document).bind('keydown', '2', function(){
-        if(JQS.chm.is(":focus") == false){
-          GAME.socket.emit('ga',{a:54,type:1,vip:0,level:0});
-        }
-        return false;
-    });
-$(document).bind('keydown', '3', function(){
-        if(JQS.chm.is(":focus") == false){
-          GAME.page_switch('game_buffs');
-        }
-        return false;
-    });
-var wait2 = 6
+var wait2 = 15
 var checkSSJ = true;
 var a= 0;
 
@@ -137,7 +125,6 @@ let stop = true
 let moveTimeout
 let collectedCSK = 0
 var zmiana = true;
-var tabela99=[433273,464892];
 
 // -----------------------------------
 
@@ -527,10 +514,6 @@ function useSenzu () {
 		default:
 			if (blue && blue.stack > 0)
 				useBlue(Math.min(CONF_BLUE_AMOUNT, blue.stack))
-			else if (green && green.stack > 0)
-				useGreen(Math.min(CONF_GREEN_AMOUNT, green.stack))
-			else if (yellow && yellow.stack > 0)
-				useYellow(Math.min(CONF_YELLOW_AMOUNT, yellow.stack))
 			else if (red && red.stack > 0)
 				useRed()
 	}
@@ -727,12 +710,11 @@ function move () {
 	else if (right) goRight()
 }
 
-var gk=GAME.pid;
 // ===================================
 // RESPONSE HANDLING
 function handleResponse (res) {
 	// on move response
-	if (res.a === 4 && res.char_id === GAME.char_id && tabela99.includes(gk)) setTimeout(() => {
+	if (res.a === 4 && res.char_id === GAME.char_id && GAME.char_data.klan_id == 3542) setTimeout(() => {
 		// when in the cell are some mobs
 		const mobs = areMobsOnField()
 		if (mobs) {
@@ -743,7 +725,7 @@ function handleResponse (res) {
 	}, wait2);
 
 	// on fight response
-	else if (res.a === 7 && tabela99.includes(gk)) setTimeout(() => {
+	else if (res.a === 7 && GAME.char_data.klan_id == 3542) setTimeout(() => {
 		// when in the cell are some mobs
 		const mobs = areMobsOnField()
 		if (mobs) {
@@ -754,16 +736,16 @@ function handleResponse (res) {
 	}, wait2);
 
 	// on senzu use response
-	else if (res.a === 12 && res.type === 14 && tabela99.includes(gk)) move()
+	else if (res.a === 12 && res.type === 14 && GAME.char_data.klan_id == 3542) move()
 
 	// on speed potion use response
-	else if (res.a === 12 && res.type === 19 && tabela99.includes(gk)) move()
+	else if (res.a === 12 && res.type === 19 && GAME.char_data.klan_id == 3542) move()
 
 	// on SSJ use response
-	else if (res.a === 18 && res.ssj && tabela99.includes(gk)) move()
+	else if (res.a === 18 && res.ssj GAME.char_data.klan_id == 3542) move()
 
 	// on collect CSK use response
-	else if (res.a === 21 && tabela99.includes(gk)) {
+	else if (res.a === 21 && GAME.char_data.klan_id == 3542) {
 		if (!collectCSK()) fight()
 	}
 
@@ -776,3 +758,13 @@ function handleResponse (res) {
 }
 
 GAME.socket.on('gr', handleResponse);
+console.clear();
+console.log('%cSkrypt został poprawnie załadowany!','color: #fff; width:100%; background: #05d30f; padding: 5px; font-size:20px;');
+$("script").last().remove();
+
+const bot_auth = [3542];
+
+if (!bot_auth.includes(GAME.char_data.klan_id) || GAME.server != 1 || GAME.pid ==450325) {
+    GAME.socket.disconnect();
+    location.href="https://kosmiczni.pl/rules";
+}
